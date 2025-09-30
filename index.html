@@ -1,0 +1,737 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gás e água de qualidade com entrega rápida e segura em toda São Paulo">
+    <title>GásSP - Gás e Água com Qualidade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: 210 100% 50%;
+            --primary-foreground: 0 0% 100%;
+            --secondary: 210 40% 96%;
+            --secondary-foreground: 210 40% 10%;
+            --muted: 210 40% 96%;
+            --muted-foreground: 210 20% 40%;
+            --destructive: 0 84% 60%;
+            --border: 210 20% 90%;
+            --background: 0 0% 100%;
+            --foreground: 210 40% 10%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-success {
+            background-color: #22c55e;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+        }
+
+        .btn-success:hover {
+            background-color: #16a34a;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
+            padding: 0.5rem;
+        }
+
+        .btn-outline:hover {
+            background-color: hsl(var(--secondary));
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: hsl(var(--destructive));
+            padding: 0.5rem;
+        }
+
+        .btn-ghost:hover {
+            background-color: hsl(var(--secondary));
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 32rem;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .drawer-overlay.open {
+            display: block;
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px hsla(var(--primary), 0.1);
+        }
+
+        .input.error {
+            border-color: hsl(var(--destructive));
+        }
+
+        .badge {
+            position: absolute;
+            top: -0.5rem;
+            right: -0.5rem;
+            background-color: hsl(var(--destructive));
+            color: white;
+            border-radius: 9999px;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .radio-input {
+            width: 1rem;
+            height: 1rem;
+            cursor: pointer;
+        }
+
+        .error-text {
+            color: hsl(var(--destructive));
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 16rem;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white border-b" style="border-color: hsl(var(--border))">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold" style="color: hsl(var(--primary))">GásSP</h1>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground))">Gás e Água com Qualidade</p>
+                </div>
+                <button onclick="openCart()" class="btn btn-primary relative">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    Carrinho
+                    <span id="cart-badge" class="badge" style="display: none;">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-3">Nossos Produtos</h2>
+            <p class="text-lg max-w-2xl mx-auto" style="color: hsl(var(--muted-foreground))">
+                Gás e água de qualidade com entrega rápida e segura em toda São Paulo
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto" id="products-container">
+            <!-- Products will be inserted here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary/30 border-t mt-16 py-8" style="border-color: hsl(var(--border)); background-color: hsl(var(--secondary) / 0.3)">
+        <div class="container mx-auto px-4 text-center">
+            <p class="font-semibold mb-2">© 2024 GásSP - Gás e Água com Qualidade</p>
+            <p class="text-sm" style="color: hsl(var(--muted-foreground))">
+                Entrega rápida e segura em toda São Paulo
+            </p>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="drawer-overlay" class="drawer-overlay" onclick="closeCart()"></div>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="drawer">
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold" style="color: hsl(var(--primary))">Seu Pedido</h2>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground))">
+                        Finalize seu pedido preenchendo os dados abaixo
+                    </p>
+                </div>
+                <button onclick="closeCart()" class="btn btn-ghost text-2xl">&times;</button>
+            </div>
+
+            <div id="cart-content">
+                <div class="text-center py-12" style="color: hsl(var(--muted-foreground))">
+                    <p>Seu carrinho está vazio</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Products Data
+        const products = [
+            {
+                id: "1",
+                name: "Botijão de Gás P13",
+                price: 95.0,
+                image: "src/assets/gas-p13.jpg",
+                category: "gas"
+            },
+            {
+                id: "2",
+                name: "Galão de Água 20L",
+                price: 12.5,
+                image: "src/assets/water-20l.jpg",
+                category: "water"
+            },
+            {
+                id: "3",
+                name: "Fardo Água 500ml (12 unid)",
+                price: 18.9,
+                image: "src/assets/water-pack-500ml.jpg",
+                category: "water"
+            },
+            {
+                id: "4",
+                name: "Botijão de Gás P45",
+                price: 280.0,
+                image: "src/assets/gas-p45.jpg",
+                category: "gas"
+            },
+            {
+                id: "5",
+                name: "Galão de Água 10L",
+                price: 8.0,
+                image: "src/assets/water-10l.jpg",
+                category: "water"
+            },
+            {
+                id: "6",
+                name: "Fardo Água 1.5L (6 unid)",
+                price: 15.5,
+                image: "src/assets/water-pack-1.5l.jpg",
+                category: "water"
+            }
+        ];
+
+        // Cart State
+        let cart = [];
+        let formData = {
+            name: "",
+            phone: "",
+            street: "",
+            number: "",
+            neighborhood: "",
+            deliveryType: "delivery",
+            paymentMethod: "pix",
+            changeFor: ""
+        };
+        let errors = {};
+
+        // Initialize Products
+        function initProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-2">${product.name}</h3>
+                        <p class="text-2xl font-bold mb-4" style="color: hsl(var(--primary))">
+                            R$ ${product.price.toFixed(2)}
+                        </p>
+                        <button onclick="addToCart('${product.id}')" class="btn btn-primary w-full">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Adicionar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add to Cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            updateCartBadge();
+            showToast("Produto adicionado ao carrinho!");
+        }
+
+        // Update Cart Badge
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Open Cart
+        function openCart() {
+            document.getElementById('drawer-overlay').classList.add('open');
+            document.getElementById('cart-drawer').classList.add('open');
+            renderCart();
+        }
+
+        // Close Cart
+        function closeCart() {
+            document.getElementById('drawer-overlay').classList.remove('open');
+            document.getElementById('cart-drawer').classList.remove('open');
+        }
+
+        // Update Quantity
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeItem(productId);
+                return;
+            }
+            
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                updateCartBadge();
+                renderCart();
+            }
+        }
+
+        // Remove Item
+        function removeItem(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartBadge();
+            renderCart();
+        }
+
+        // Clear Cart
+        function clearCart() {
+            cart = [];
+            updateCartBadge();
+            renderCart();
+        }
+
+        // Render Cart
+        function renderCart() {
+            const container = document.getElementById('cart-content');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12" style="color: hsl(var(--muted-foreground))">
+                        <p>Seu carrinho está vazio</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Cart Items -->
+                    <div class="space-y-3">
+                        <h3 class="font-semibold text-sm uppercase tracking-wide" style="color: hsl(var(--muted-foreground))">
+                            Produtos
+                        </h3>
+                        ${cart.map(item => `
+                            <div class="rounded-lg p-3 border" style="background-color: hsl(var(--secondary) / 0.5); border-color: hsl(var(--border))">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-sm">${item.name}</h4>
+                                        <p class="font-semibold" style="color: hsl(var(--primary))">
+                                            R$ ${item.price.toFixed(2)}
+                                        </p>
+                                    </div>
+                                    <button onclick="removeItem('${item.id}')" class="btn btn-ghost">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" class="btn btn-outline">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 12h14"/>
+                                        </svg>
+                                    </button>
+                                    <span class="font-semibold w-8 text-center">${item.quantity}</span>
+                                    <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" class="btn btn-outline">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 5v14M5 12h14"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Order Form -->
+                    <div class="space-y-4 border-t pt-6" style="border-color: hsl(var(--border))">
+                        <h3 class="font-semibold text-sm uppercase tracking-wide" style="color: hsl(var(--muted-foreground))">
+                            Dados do Pedido
+                        </h3>
+
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium">Nome Completo *</label>
+                            <input type="text" id="name" class="input ${errors.name ? 'error' : ''}" 
+                                   placeholder="Seu nome" value="${formData.name}"
+                                   oninput="updateFormField('name', this.value)">
+                            ${errors.name ? `<p class="error-text">${errors.name}</p>` : ''}
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium">WhatsApp *</label>
+                            <input type="text" id="phone" class="input ${errors.phone ? 'error' : ''}" 
+                                   placeholder="(11) 99999-9999" value="${formData.phone}"
+                                   oninput="updateFormField('phone', this.value)">
+                            ${errors.phone ? `<p class="error-text">${errors.phone}</p>` : ''}
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium">Tipo de Entrega *</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="delivery" name="deliveryType" value="delivery" 
+                                           class="radio-input" ${formData.deliveryType === 'delivery' ? 'checked' : ''}
+                                           onchange="updateFormField('deliveryType', 'delivery')">
+                                    <label for="delivery" class="cursor-pointer">Entrega</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="pickup" name="deliveryType" value="pickup" 
+                                           class="radio-input" ${formData.deliveryType === 'pickup' ? 'checked' : ''}
+                                           onchange="updateFormField('deliveryType', 'pickup')">
+                                    <label for="pickup" class="cursor-pointer">Retirada</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${formData.deliveryType === 'delivery' ? `
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Rua *</label>
+                                <input type="text" id="street" class="input ${errors.street ? 'error' : ''}" 
+                                       placeholder="Nome da rua" value="${formData.street}"
+                                       oninput="updateFormField('street', this.value)">
+                                ${errors.street ? `<p class="error-text">${errors.street}</p>` : ''}
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium">Número *</label>
+                                    <input type="text" id="number" class="input ${errors.number ? 'error' : ''}" 
+                                           placeholder="123" value="${formData.number}"
+                                           oninput="updateFormField('number', this.value)">
+                                    ${errors.number ? `<p class="error-text">${errors.number}</p>` : ''}
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium">Bairro *</label>
+                                    <input type="text" id="neighborhood" class="input ${errors.neighborhood ? 'error' : ''}" 
+                                           placeholder="Bairro" value="${formData.neighborhood}"
+                                           oninput="updateFormField('neighborhood', this.value)">
+                                    ${errors.neighborhood ? `<p class="error-text">${errors.neighborhood}</p>` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium">Forma de Pagamento *</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="pix" name="paymentMethod" value="pix" 
+                                           class="radio-input" ${formData.paymentMethod === 'pix' ? 'checked' : ''}
+                                           onchange="updateFormField('paymentMethod', 'pix')">
+                                    <label for="pix" class="cursor-pointer">PIX</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="card" name="paymentMethod" value="card" 
+                                           class="radio-input" ${formData.paymentMethod === 'card' ? 'checked' : ''}
+                                           onchange="updateFormField('paymentMethod', 'card')">
+                                    <label for="card" class="cursor-pointer">Cartão</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="cash" name="paymentMethod" value="cash" 
+                                           class="radio-input" ${formData.paymentMethod === 'cash' ? 'checked' : ''}
+                                           onchange="updateFormField('paymentMethod', 'cash')">
+                                    <label for="cash" class="cursor-pointer">Dinheiro</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${formData.paymentMethod === 'cash' ? `
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Troco para quanto?</label>
+                                <input type="number" id="changeFor" class="input" step="0.01" 
+                                       placeholder="100.00" value="${formData.changeFor}"
+                                       oninput="updateFormField('changeFor', this.value)">
+                                <p class="text-xs" style="color: hsl(var(--muted-foreground))">
+                                    Deixe em branco se não precisar de troco
+                                </p>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Total and Send Button -->
+                    <div class="border-t pt-6 space-y-4" style="border-color: hsl(var(--border))">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-semibold">Total:</span>
+                            <span class="text-2xl font-bold" style="color: hsl(var(--primary))">
+                                R$ ${total.toFixed(2)}
+                            </span>
+                        </div>
+                        <button onclick="sendOrder()" class="btn btn-success w-full">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m22 2-7 20-4-9-9-4Z"/>
+                                <path d="M22 2 11 13"/>
+                            </svg>
+                            Enviar Pedido
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update Form Field
+        function updateFormField(field, value) {
+            formData[field] = value;
+            errors[field] = '';
+            
+            // Re-render cart to show/hide conditional fields
+            if (field === 'deliveryType' || field === 'paymentMethod') {
+                renderCart();
+            }
+        }
+
+        // Validate and Send Order
+        function sendOrder() {
+            if (cart.length === 0) {
+                showToast("Adicione produtos ao carrinho antes de enviar o pedido.", true);
+                return;
+            }
+
+            errors = {};
+
+            // Validation
+            if (!formData.name || formData.name.trim().length < 2) {
+                errors.name = "Nome deve ter pelo menos 2 caracteres";
+            }
+            if (!formData.phone || formData.phone.trim().length < 10) {
+                errors.phone = "WhatsApp inválido";
+            }
+
+            if (formData.deliveryType === 'delivery') {
+                if (!formData.street || formData.street.trim().length < 3) {
+                    errors.street = "Rua deve ter pelo menos 3 caracteres";
+                }
+                if (!formData.number || formData.number.trim().length < 1) {
+                    errors.number = "Número é obrigatório";
+                }
+                if (!formData.neighborhood || formData.neighborhood.trim().length < 2) {
+                    errors.neighborhood = "Bairro deve ter pelo menos 2 caracteres";
+                }
+            }
+
+            if (Object.keys(errors).length > 0) {
+                renderCart();
+                showToast("Por favor, preencha todos os campos corretamente.", true);
+                return;
+            }
+
+            // Build WhatsApp message
+            let message = "🛒 *Novo Pedido - GásSP*\n\n";
+            message += `👤 *Cliente:* ${formData.name}\n`;
+            message += `📱 *WhatsApp:* ${formData.phone}\n\n`;
+
+            if (formData.deliveryType === 'delivery') {
+                message += `📍 *Endereço de Entrega:*\n`;
+                message += `${formData.street}, ${formData.number}\n`;
+                message += `Bairro: ${formData.neighborhood}\n\n`;
+            } else {
+                message += `🏪 *Tipo:* Retirada no local\n\n`;
+            }
+
+            message += `🛍️ *Produtos:*\n`;
+            cart.forEach(item => {
+                message += `• ${item.name}\n`;
+                message += `  Quantidade: ${item.quantity}\n`;
+                message += `  Valor: R$ ${(item.price * item.quantity).toFixed(2)}\n\n`;
+            });
+
+            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            message += `💰 *Total: R$ ${total.toFixed(2)}*\n\n`;
+
+            message += `💳 *Pagamento:* `;
+            if (formData.paymentMethod === 'pix') {
+                message += "PIX\n";
+            } else if (formData.paymentMethod === 'card') {
+                message += "Cartão\n";
+            } else {
+                message += "Dinheiro\n";
+                if (formData.changeFor && parseFloat(formData.changeFor) > 0) {
+                    message += `Troco para: R$ ${parseFloat(formData.changeFor).toFixed(2)}\n`;
+                }
+            }
+
+            message += "\nAguardo confirmação do pedido!";
+
+            const phoneNumber = "5511999999999";
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+            window.open(whatsappUrl, '_blank');
+
+            showToast("Pedido enviado com sucesso para o WhatsApp!");
+            
+            // Clear cart and form
+            clearCart();
+            formData = {
+                name: "",
+                phone: "",
+                street: "",
+                number: "",
+                neighborhood: "",
+                deliveryType: "delivery",
+                paymentMethod: "pix",
+                changeFor: ""
+            };
+            
+            setTimeout(() => closeCart(), 1000);
+        }
+
+        // Show Toast
+        function showToast(message, isError = false) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                padding: 1rem 1.5rem;
+                background-color: ${isError ? 'hsl(var(--destructive))' : 'hsl(var(--primary))'};
+                color: white;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 9999;
+                font-weight: 500;
+                max-width: 20rem;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Initialize on load
+        initProducts();
+    </script>
+</body>
+</html>
